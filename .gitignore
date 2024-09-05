@@ -1,0 +1,5 @@
+# 忽略 serve 文件夹下的 node_modules 目录
+server/node_modules/
+
+# 忽略 client 文件夹下的 node_modules 目录
+client/node_modules/
