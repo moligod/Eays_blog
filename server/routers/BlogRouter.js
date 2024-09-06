@@ -29,6 +29,7 @@ router.post('/_token/add', async (req, res) => {
 
 router.delete('/_token/delete', async (req, res) => {
     let id = req.query.id;
+
     const delete_sql = 'delete from `blog` where `id`=?';
     let { err, rows } = await db.async.run(delete_sql, [id]);
     if (err == null) {

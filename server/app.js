@@ -4,14 +4,16 @@ const path = require('path');
 const { db, genid } = require('./db/dbUtils');
 const app = express();
 const port = 8080;
-// 解决跨域问题
+//开放跨域请求
 app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', '*');
-  res.header('Access-Control-Allow-Headers', 'DELETE,GET,POST,PUT,OPTIONS');
-  if (req.method === 'OPTIONS') {
-    res.sendStatus(200);
-  } else next();
+  //设置允许跨域的域名，*代表允许任意域名跨域
+  res.header("Access-Control-Allow-Origin", "*");
+  //允许的header类型
+  res.header("Access-Control-Allow-Headers", "*");
+  //跨域允许的请求方式
+  res.header("Access-Control-Allow-Methods", "DELETE,PUT,POST,GET,OPTIONS");
+  if (req.method == "OPTIONS") res.sendStatus(200); //让options尝试请求快速结束
+  else next();
 });
 // 解析请求体
 app.use(express.json());

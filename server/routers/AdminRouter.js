@@ -5,8 +5,9 @@ const { db, genid } = require('../db/dbUtils');
 // 路由
 router.post('/login', async (req, res) => {
     let { account, password } = req.body;
-    let { err,rows } = await db.async.all('select * from admin where account=? and password=?', [account, password]);
-
+    
+    let { err,rows } = await db.async.all('select * from `admin` where `account` = ? AND `password` = ?', [account, password]);
+    
     if(err == null && rows.length > 0){
         let login_token = uuidv4();
         let update_token_sql = 'update `admin` set `token`=? where `id`=?';
@@ -15,6 +16,7 @@ router.post('/login', async (req, res) => {
         let admin_info = rows[0];
         admin_info.token = login_token
         admin_info.password = '';
+        
         res.send({
             code: 200,
             msg: '登录成功',
