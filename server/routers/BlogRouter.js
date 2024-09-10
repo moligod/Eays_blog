@@ -81,6 +81,25 @@ router.get('/list', async (req, res) => {
         });
     }
 })
+router.get('/detail',async (req,res)=>{
+    let { id } = req.query;
+    console.log(id)
+    const detail_sql ='select * from `blog` where `id`=?';
+    let { err, rows } = await db.async.all(detail_sql, [id])
+    if (err == null) {
+        res.send({
+            code: 200,
+            msg: '查询成功',
+            rows
+        })
+    } else {
+        res.send({
+            code: 500,
+            msg: '查询失败'
+        });
+    }
+})
+
 router.get('/search', async (req, res) => {
     /**     
      * keyworld 关键字
@@ -108,18 +127,22 @@ router.get('/search', async (req, res) => {
     }
     //关键字条件
     if (keyword != '') {
-        whereSqls.push('(`title` like ? OR ``content` like ?)');
+        console.log('keyword:', keyword);
+        whereSqls.push('(`title` like ? OR `content` like ?)');
         //两个条件，可以用一个参数
         params.push('%' + keyword + '%');
         params.push('%' + keyword + '%');
     }
     //拼接查询条件
     let whereSqlStr = '';
+    console.log(whereSqls);
     if (whereSqls.length > 0) {
         whereSqlStr = 'where ' + whereSqls.join(' and ');
     }
     //分页，查询blog+条件+分页（按照createtime时间进行降序排序，并且限制查询结果，第一个值是偏移量，第二个值是偏移量+最大值，返回这两个区间的值）
-    let searchSql = "select * from `blog`" + whereSqlStr + " ORDER BY `create_time` DESC limit ?,?";
+    // let searchSql = "select * from `blog`" + whereSqlStr + " ORDER BY `create_time` DESC limit ?,?";
+    //分页并限制显示的字数
+    let searchSql = "SELECT `id`,`category_id`,`create_time`,`title`,substr(`content`,0,50) AS `content` FROM `blog`" + whereSqlStr + " ORDER BY `create_time` DESC limit ?,?";
     //查询条件（原查询条件+拼接分页条件）
     let searchSqlParams = params.concat([(page - 1) * pageSize, pageSize]);
 

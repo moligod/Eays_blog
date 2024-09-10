@@ -26,7 +26,6 @@ const ADMIN_TOKEN_PATH = '/_token'
 app.all("*", async (req, res, next) => {
   if (req.path.indexOf(ADMIN_TOKEN_PATH) > -1) {
     let { token } = req.headers;
-    console.log(token);
     let admin_token_sql = 'select * from `admin` where `token`=?';
     let adminResult = await db.async.all(admin_token_sql, [token]);
     if (adminResult.err != null || adminResult.rows.length == 0) {
